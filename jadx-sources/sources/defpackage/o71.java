@@ -1,0 +1,9 @@
+package defpackage;
+
+import java.util.Set;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class o71 implements df0 {
+    public static final Set b = ms.U0(new Integer[]{300, 301, 404, 405, 410, 414, 501});
+}

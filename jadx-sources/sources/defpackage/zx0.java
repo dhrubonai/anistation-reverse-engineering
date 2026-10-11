@@ -1,0 +1,13 @@
+package defpackage;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class zx0 extends a03 {
+    public ub2 N;
+
+    @Override // defpackage.a03
+    public final t47 a1(t47 t47Var) {
+        this.N.invoke(t47Var);
+        return t47Var;
+    }
+}

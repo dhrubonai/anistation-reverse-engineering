@@ -1,0 +1,17 @@
+package com.google.protobuf;
+
+import com.google.protobuf.Internal;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class q1 implements Internal.EnumVerifier {
+    public static final q1 a = new Object();
+
+    @Override // com.google.protobuf.Internal.EnumVerifier
+    public final boolean isInRange(int i) {
+        if (NullValue.forNumber(i) != null) {
+            return true;
+        }
+        return false;
+    }
+}

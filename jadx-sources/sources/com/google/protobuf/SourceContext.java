@@ -1,0 +1,196 @@
+package com.google.protobuf;
+
+import com.google.protobuf.GeneratedMessageLite;
+import defpackage.ze0;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class SourceContext extends GeneratedMessageLite<SourceContext, Builder> implements SourceContextOrBuilder {
+    private static final SourceContext DEFAULT_INSTANCE;
+    public static final int FILE_NAME_FIELD_NUMBER = 1;
+    private static volatile Parser<SourceContext> PARSER;
+    private String fileName_ = "";
+
+    static {
+        SourceContext sourceContext = new SourceContext();
+        DEFAULT_INSTANCE = sourceContext;
+        GeneratedMessageLite.registerDefaultInstance(SourceContext.class, sourceContext);
+    }
+
+    private SourceContext() {
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public void clearFileName() {
+        this.fileName_ = getDefaultInstance().getFileName();
+    }
+
+    public static SourceContext getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.createBuilder();
+    }
+
+    public static SourceContext parseDelimitedFrom(InputStream inputStream) {
+        return (SourceContext) GeneratedMessageLite.parseDelimitedFrom(DEFAULT_INSTANCE, inputStream);
+    }
+
+    public static SourceContext parseFrom(ByteBuffer byteBuffer) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteBuffer);
+    }
+
+    public static Parser<SourceContext> parser() {
+        return DEFAULT_INSTANCE.getParserForType();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public void setFileName(String str) {
+        str.getClass();
+        this.fileName_ = str;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public void setFileNameBytes(ByteString byteString) {
+        AbstractMessageLite.checkByteStringIsUtf8(byteString);
+        this.fileName_ = byteString.toStringUtf8();
+    }
+
+    /* JADX WARN: Failed to find 'out' block for switch in B:2:0x0009. Please report as an issue. */
+    @Override // com.google.protobuf.GeneratedMessageLite
+    public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
+        Parser parser;
+        int i = w1.a[methodToInvoke.ordinal()];
+        w1 w1Var = null;
+        switch (i) {
+            case 1:
+                return new SourceContext();
+            case 2:
+                return new Builder(w1Var);
+            case 3:
+                return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, "\u0000\u0001\u0000\u0000\u0001\u0001\u0001\u0000\u0000\u0000\u0001Ȉ", new Object[]{"fileName_"});
+            case 4:
+                return DEFAULT_INSTANCE;
+            case 5:
+                Parser<SourceContext> parser2 = PARSER;
+                if (parser2 == null) {
+                    synchronized (SourceContext.class) {
+                        try {
+                            parser = PARSER;
+                            if (parser == null) {
+                                parser = new GeneratedMessageLite.DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+                                PARSER = parser;
+                            }
+                        } catch (Throwable th) {
+                            throw th;
+                        }
+                    }
+                    return parser;
+                }
+                return parser2;
+            case 6:
+                return (byte) 1;
+            default:
+                ze0.d();
+            case 7:
+                return null;
+        }
+    }
+
+    @Override // com.google.protobuf.SourceContextOrBuilder
+    public String getFileName() {
+        return this.fileName_;
+    }
+
+    @Override // com.google.protobuf.SourceContextOrBuilder
+    public ByteString getFileNameBytes() {
+        return ByteString.copyFromUtf8(this.fileName_);
+    }
+
+    /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+    /* loaded from: classes.dex */
+    public static final class Builder extends GeneratedMessageLite.Builder<SourceContext, Builder> implements SourceContextOrBuilder {
+        private Builder() {
+            super(SourceContext.DEFAULT_INSTANCE);
+        }
+
+        public Builder clearFileName() {
+            copyOnWrite();
+            ((SourceContext) this.instance).clearFileName();
+            return this;
+        }
+
+        @Override // com.google.protobuf.SourceContextOrBuilder
+        public String getFileName() {
+            return ((SourceContext) this.instance).getFileName();
+        }
+
+        @Override // com.google.protobuf.SourceContextOrBuilder
+        public ByteString getFileNameBytes() {
+            return ((SourceContext) this.instance).getFileNameBytes();
+        }
+
+        public Builder setFileName(String str) {
+            copyOnWrite();
+            ((SourceContext) this.instance).setFileName(str);
+            return this;
+        }
+
+        public Builder setFileNameBytes(ByteString byteString) {
+            copyOnWrite();
+            ((SourceContext) this.instance).setFileNameBytes(byteString);
+            return this;
+        }
+
+        public /* synthetic */ Builder(w1 w1Var) {
+            this();
+        }
+    }
+
+    public static Builder newBuilder(SourceContext sourceContext) {
+        return DEFAULT_INSTANCE.createBuilder(sourceContext);
+    }
+
+    public static SourceContext parseDelimitedFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseDelimitedFrom(DEFAULT_INSTANCE, inputStream, extensionRegistryLite);
+    }
+
+    public static SourceContext parseFrom(ByteBuffer byteBuffer, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteBuffer, extensionRegistryLite);
+    }
+
+    public static SourceContext parseFrom(ByteString byteString) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteString);
+    }
+
+    public static SourceContext parseFrom(ByteString byteString, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteString, extensionRegistryLite);
+    }
+
+    public static SourceContext parseFrom(byte[] bArr) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, bArr);
+    }
+
+    public static SourceContext parseFrom(byte[] bArr, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, bArr, extensionRegistryLite);
+    }
+
+    public static SourceContext parseFrom(InputStream inputStream) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, inputStream);
+    }
+
+    public static SourceContext parseFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, inputStream, extensionRegistryLite);
+    }
+
+    public static SourceContext parseFrom(CodedInputStream codedInputStream) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, codedInputStream);
+    }
+
+    public static SourceContext parseFrom(CodedInputStream codedInputStream, ExtensionRegistryLite extensionRegistryLite) {
+        return (SourceContext) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, codedInputStream, extensionRegistryLite);
+    }
+}

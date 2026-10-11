@@ -1,0 +1,9 @@
+package defpackage;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public abstract class z50 {
+    public static final i90 a = i90.d("\n");
+    public static final i90 b = i90.d("\r\n");
+    public static final tv c = new tv("\n", (byte) 2);
+}

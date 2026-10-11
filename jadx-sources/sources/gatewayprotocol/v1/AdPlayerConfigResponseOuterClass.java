@@ -1,0 +1,635 @@
+package gatewayprotocol.v1;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.ExtensionRegistryLite;
+import com.google.protobuf.GeneratedMessageLite;
+import com.google.protobuf.MessageLiteOrBuilder;
+import com.google.protobuf.Parser;
+import defpackage.a6;
+import defpackage.ze0;
+import gatewayprotocol.v1.CampaignMetadataOuterClass;
+import gatewayprotocol.v1.ErrorOuterClass;
+import gatewayprotocol.v1.WebviewConfiguration;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes2.dex */
+public final class AdPlayerConfigResponseOuterClass {
+
+    /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+    /* loaded from: classes2.dex */
+    public interface AdPlayerConfigResponseOrBuilder extends MessageLiteOrBuilder {
+        ByteString getAdData();
+
+        ByteString getAdDataRefreshToken();
+
+        int getAdDataVersion();
+
+        CampaignMetadataOuterClass.CampaignMetadata getCampaignMetadata();
+
+        ErrorOuterClass.Error getError();
+
+        ByteString getImpressionConfiguration();
+
+        int getImpressionConfigurationVersion();
+
+        ByteString getTrackingToken();
+
+        WebviewConfiguration.WebViewConfiguration getWebviewConfiguration();
+
+        boolean hasCampaignMetadata();
+
+        boolean hasError();
+
+        boolean hasWebviewConfiguration();
+    }
+
+    private AdPlayerConfigResponseOuterClass() {
+    }
+
+    /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+    /* loaded from: classes2.dex */
+    public static final class AdPlayerConfigResponse extends GeneratedMessageLite<AdPlayerConfigResponse, Builder> implements AdPlayerConfigResponseOrBuilder {
+        public static final int AD_DATA_FIELD_NUMBER = 7;
+        public static final int AD_DATA_REFRESH_TOKEN_FIELD_NUMBER = 5;
+        public static final int AD_DATA_VERSION_FIELD_NUMBER = 8;
+        public static final int CAMPAIGN_METADATA_FIELD_NUMBER = 9;
+        private static final AdPlayerConfigResponse DEFAULT_INSTANCE;
+        public static final int ERROR_FIELD_NUMBER = 6;
+        public static final int IMPRESSION_CONFIGURATION_FIELD_NUMBER = 2;
+        public static final int IMPRESSION_CONFIGURATION_VERSION_FIELD_NUMBER = 3;
+        private static volatile Parser<AdPlayerConfigResponse> PARSER = null;
+        public static final int TRACKING_TOKEN_FIELD_NUMBER = 1;
+        public static final int WEBVIEW_CONFIGURATION_FIELD_NUMBER = 4;
+        private ByteString adDataRefreshToken_;
+        private int adDataVersion_;
+        private ByteString adData_;
+        private int bitField0_;
+        private CampaignMetadataOuterClass.CampaignMetadata campaignMetadata_;
+        private ErrorOuterClass.Error error_;
+        private int impressionConfigurationVersion_;
+        private ByteString impressionConfiguration_;
+        private ByteString trackingToken_;
+        private WebviewConfiguration.WebViewConfiguration webviewConfiguration_;
+
+        static {
+            AdPlayerConfigResponse adPlayerConfigResponse = new AdPlayerConfigResponse();
+            DEFAULT_INSTANCE = adPlayerConfigResponse;
+            GeneratedMessageLite.registerDefaultInstance(AdPlayerConfigResponse.class, adPlayerConfigResponse);
+        }
+
+        private AdPlayerConfigResponse() {
+            ByteString byteString = ByteString.EMPTY;
+            this.trackingToken_ = byteString;
+            this.impressionConfiguration_ = byteString;
+            this.adDataRefreshToken_ = byteString;
+            this.adData_ = byteString;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearAdData() {
+            this.adData_ = getDefaultInstance().getAdData();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearAdDataRefreshToken() {
+            this.adDataRefreshToken_ = getDefaultInstance().getAdDataRefreshToken();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearAdDataVersion() {
+            this.adDataVersion_ = 0;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearCampaignMetadata() {
+            this.campaignMetadata_ = null;
+            this.bitField0_ &= -5;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearError() {
+            this.error_ = null;
+            this.bitField0_ &= -3;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearImpressionConfiguration() {
+            this.impressionConfiguration_ = getDefaultInstance().getImpressionConfiguration();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearImpressionConfigurationVersion() {
+            this.impressionConfigurationVersion_ = 0;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearTrackingToken() {
+            this.trackingToken_ = getDefaultInstance().getTrackingToken();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void clearWebviewConfiguration() {
+            this.webviewConfiguration_ = null;
+            this.bitField0_ &= -2;
+        }
+
+        public static AdPlayerConfigResponse getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void mergeCampaignMetadata(CampaignMetadataOuterClass.CampaignMetadata campaignMetadata) {
+            campaignMetadata.getClass();
+            CampaignMetadataOuterClass.CampaignMetadata campaignMetadata2 = this.campaignMetadata_;
+            if (campaignMetadata2 != null && campaignMetadata2 != CampaignMetadataOuterClass.CampaignMetadata.getDefaultInstance()) {
+                this.campaignMetadata_ = CampaignMetadataOuterClass.CampaignMetadata.newBuilder(this.campaignMetadata_).mergeFrom((CampaignMetadataOuterClass.CampaignMetadata.Builder) campaignMetadata).buildPartial();
+            } else {
+                this.campaignMetadata_ = campaignMetadata;
+            }
+            this.bitField0_ |= 4;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void mergeError(ErrorOuterClass.Error error) {
+            error.getClass();
+            ErrorOuterClass.Error error2 = this.error_;
+            if (error2 != null && error2 != ErrorOuterClass.Error.getDefaultInstance()) {
+                this.error_ = ErrorOuterClass.Error.newBuilder(this.error_).mergeFrom((ErrorOuterClass.Error.Builder) error).buildPartial();
+            } else {
+                this.error_ = error;
+            }
+            this.bitField0_ |= 2;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void mergeWebviewConfiguration(WebviewConfiguration.WebViewConfiguration webViewConfiguration) {
+            webViewConfiguration.getClass();
+            WebviewConfiguration.WebViewConfiguration webViewConfiguration2 = this.webviewConfiguration_;
+            if (webViewConfiguration2 != null && webViewConfiguration2 != WebviewConfiguration.WebViewConfiguration.getDefaultInstance()) {
+                this.webviewConfiguration_ = WebviewConfiguration.WebViewConfiguration.newBuilder(this.webviewConfiguration_).mergeFrom((WebviewConfiguration.WebViewConfiguration.Builder) webViewConfiguration).buildPartial();
+            } else {
+                this.webviewConfiguration_ = webViewConfiguration;
+            }
+            this.bitField0_ |= 1;
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.createBuilder();
+        }
+
+        public static AdPlayerConfigResponse parseDelimitedFrom(InputStream inputStream) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseDelimitedFrom(DEFAULT_INSTANCE, inputStream);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(ByteBuffer byteBuffer) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteBuffer);
+        }
+
+        public static Parser<AdPlayerConfigResponse> parser() {
+            return DEFAULT_INSTANCE.getParserForType();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setAdData(ByteString byteString) {
+            byteString.getClass();
+            this.adData_ = byteString;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setAdDataRefreshToken(ByteString byteString) {
+            byteString.getClass();
+            this.adDataRefreshToken_ = byteString;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setAdDataVersion(int i) {
+            this.adDataVersion_ = i;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setCampaignMetadata(CampaignMetadataOuterClass.CampaignMetadata campaignMetadata) {
+            campaignMetadata.getClass();
+            this.campaignMetadata_ = campaignMetadata;
+            this.bitField0_ |= 4;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setError(ErrorOuterClass.Error error) {
+            error.getClass();
+            this.error_ = error;
+            this.bitField0_ |= 2;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setImpressionConfiguration(ByteString byteString) {
+            byteString.getClass();
+            this.impressionConfiguration_ = byteString;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setImpressionConfigurationVersion(int i) {
+            this.impressionConfigurationVersion_ = i;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setTrackingToken(ByteString byteString) {
+            byteString.getClass();
+            this.trackingToken_ = byteString;
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public void setWebviewConfiguration(WebviewConfiguration.WebViewConfiguration webViewConfiguration) {
+            webViewConfiguration.getClass();
+            this.webviewConfiguration_ = webViewConfiguration;
+            this.bitField0_ |= 1;
+        }
+
+        /* JADX WARN: Failed to find 'out' block for switch in B:2:0x0009. Please report as an issue. */
+        @Override // com.google.protobuf.GeneratedMessageLite
+        public final Object dynamicMethod(GeneratedMessageLite.MethodToInvoke methodToInvoke, Object obj, Object obj2) {
+            Parser parser;
+            int i = a6.a[methodToInvoke.ordinal()];
+            a6 a6Var = null;
+            switch (i) {
+                case 1:
+                    return new AdPlayerConfigResponse();
+                case 2:
+                    return new Builder(a6Var);
+                case 3:
+                    return GeneratedMessageLite.newMessageInfo(DEFAULT_INSTANCE, "\u0000\t\u0000\u0001\u0001\t\t\u0000\u0000\u0000\u0001\n\u0002\n\u0003\u0004\u0004ဉ\u0000\u0005\n\u0006ဉ\u0001\u0007\n\b\u0004\tဉ\u0002", new Object[]{"bitField0_", "trackingToken_", "impressionConfiguration_", "impressionConfigurationVersion_", "webviewConfiguration_", "adDataRefreshToken_", "error_", "adData_", "adDataVersion_", "campaignMetadata_"});
+                case 4:
+                    return DEFAULT_INSTANCE;
+                case 5:
+                    Parser<AdPlayerConfigResponse> parser2 = PARSER;
+                    if (parser2 == null) {
+                        synchronized (AdPlayerConfigResponse.class) {
+                            try {
+                                parser = PARSER;
+                                if (parser == null) {
+                                    parser = new GeneratedMessageLite.DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+                                    PARSER = parser;
+                                }
+                            } catch (Throwable th) {
+                                throw th;
+                            }
+                        }
+                        return parser;
+                    }
+                    return parser2;
+                case 6:
+                    return (byte) 1;
+                default:
+                    ze0.d();
+                case 7:
+                    return null;
+            }
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public ByteString getAdData() {
+            return this.adData_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public ByteString getAdDataRefreshToken() {
+            return this.adDataRefreshToken_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public int getAdDataVersion() {
+            return this.adDataVersion_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public CampaignMetadataOuterClass.CampaignMetadata getCampaignMetadata() {
+            CampaignMetadataOuterClass.CampaignMetadata campaignMetadata = this.campaignMetadata_;
+            if (campaignMetadata == null) {
+                return CampaignMetadataOuterClass.CampaignMetadata.getDefaultInstance();
+            }
+            return campaignMetadata;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public ErrorOuterClass.Error getError() {
+            ErrorOuterClass.Error error = this.error_;
+            if (error == null) {
+                return ErrorOuterClass.Error.getDefaultInstance();
+            }
+            return error;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public ByteString getImpressionConfiguration() {
+            return this.impressionConfiguration_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public int getImpressionConfigurationVersion() {
+            return this.impressionConfigurationVersion_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public ByteString getTrackingToken() {
+            return this.trackingToken_;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public WebviewConfiguration.WebViewConfiguration getWebviewConfiguration() {
+            WebviewConfiguration.WebViewConfiguration webViewConfiguration = this.webviewConfiguration_;
+            if (webViewConfiguration == null) {
+                return WebviewConfiguration.WebViewConfiguration.getDefaultInstance();
+            }
+            return webViewConfiguration;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public boolean hasCampaignMetadata() {
+            if ((this.bitField0_ & 4) != 0) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public boolean hasError() {
+            if ((this.bitField0_ & 2) != 0) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+        public boolean hasWebviewConfiguration() {
+            if ((this.bitField0_ & 1) != 0) {
+                return true;
+            }
+            return false;
+        }
+
+        /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+        /* loaded from: classes2.dex */
+        public static final class Builder extends GeneratedMessageLite.Builder<AdPlayerConfigResponse, Builder> implements AdPlayerConfigResponseOrBuilder {
+            private Builder() {
+                super(AdPlayerConfigResponse.DEFAULT_INSTANCE);
+            }
+
+            public Builder clearAdData() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearAdData();
+                return this;
+            }
+
+            public Builder clearAdDataRefreshToken() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearAdDataRefreshToken();
+                return this;
+            }
+
+            public Builder clearAdDataVersion() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearAdDataVersion();
+                return this;
+            }
+
+            public Builder clearCampaignMetadata() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearCampaignMetadata();
+                return this;
+            }
+
+            public Builder clearError() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearError();
+                return this;
+            }
+
+            public Builder clearImpressionConfiguration() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearImpressionConfiguration();
+                return this;
+            }
+
+            public Builder clearImpressionConfigurationVersion() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearImpressionConfigurationVersion();
+                return this;
+            }
+
+            public Builder clearTrackingToken() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearTrackingToken();
+                return this;
+            }
+
+            public Builder clearWebviewConfiguration() {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).clearWebviewConfiguration();
+                return this;
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public ByteString getAdData() {
+                return ((AdPlayerConfigResponse) this.instance).getAdData();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public ByteString getAdDataRefreshToken() {
+                return ((AdPlayerConfigResponse) this.instance).getAdDataRefreshToken();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public int getAdDataVersion() {
+                return ((AdPlayerConfigResponse) this.instance).getAdDataVersion();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public CampaignMetadataOuterClass.CampaignMetadata getCampaignMetadata() {
+                return ((AdPlayerConfigResponse) this.instance).getCampaignMetadata();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public ErrorOuterClass.Error getError() {
+                return ((AdPlayerConfigResponse) this.instance).getError();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public ByteString getImpressionConfiguration() {
+                return ((AdPlayerConfigResponse) this.instance).getImpressionConfiguration();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public int getImpressionConfigurationVersion() {
+                return ((AdPlayerConfigResponse) this.instance).getImpressionConfigurationVersion();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public ByteString getTrackingToken() {
+                return ((AdPlayerConfigResponse) this.instance).getTrackingToken();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public WebviewConfiguration.WebViewConfiguration getWebviewConfiguration() {
+                return ((AdPlayerConfigResponse) this.instance).getWebviewConfiguration();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public boolean hasCampaignMetadata() {
+                return ((AdPlayerConfigResponse) this.instance).hasCampaignMetadata();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public boolean hasError() {
+                return ((AdPlayerConfigResponse) this.instance).hasError();
+            }
+
+            @Override // gatewayprotocol.v1.AdPlayerConfigResponseOuterClass.AdPlayerConfigResponseOrBuilder
+            public boolean hasWebviewConfiguration() {
+                return ((AdPlayerConfigResponse) this.instance).hasWebviewConfiguration();
+            }
+
+            public Builder mergeCampaignMetadata(CampaignMetadataOuterClass.CampaignMetadata campaignMetadata) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).mergeCampaignMetadata(campaignMetadata);
+                return this;
+            }
+
+            public Builder mergeError(ErrorOuterClass.Error error) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).mergeError(error);
+                return this;
+            }
+
+            public Builder mergeWebviewConfiguration(WebviewConfiguration.WebViewConfiguration webViewConfiguration) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).mergeWebviewConfiguration(webViewConfiguration);
+                return this;
+            }
+
+            public Builder setAdData(ByteString byteString) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setAdData(byteString);
+                return this;
+            }
+
+            public Builder setAdDataRefreshToken(ByteString byteString) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setAdDataRefreshToken(byteString);
+                return this;
+            }
+
+            public Builder setAdDataVersion(int i) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setAdDataVersion(i);
+                return this;
+            }
+
+            public Builder setCampaignMetadata(CampaignMetadataOuterClass.CampaignMetadata.Builder builder) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setCampaignMetadata(builder.build());
+                return this;
+            }
+
+            public Builder setError(ErrorOuterClass.Error.Builder builder) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setError(builder.build());
+                return this;
+            }
+
+            public Builder setImpressionConfiguration(ByteString byteString) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setImpressionConfiguration(byteString);
+                return this;
+            }
+
+            public Builder setImpressionConfigurationVersion(int i) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setImpressionConfigurationVersion(i);
+                return this;
+            }
+
+            public Builder setTrackingToken(ByteString byteString) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setTrackingToken(byteString);
+                return this;
+            }
+
+            public Builder setWebviewConfiguration(WebviewConfiguration.WebViewConfiguration.Builder builder) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setWebviewConfiguration(builder.build());
+                return this;
+            }
+
+            public /* synthetic */ Builder(a6 a6Var) {
+                this();
+            }
+
+            public Builder setCampaignMetadata(CampaignMetadataOuterClass.CampaignMetadata campaignMetadata) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setCampaignMetadata(campaignMetadata);
+                return this;
+            }
+
+            public Builder setError(ErrorOuterClass.Error error) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setError(error);
+                return this;
+            }
+
+            public Builder setWebviewConfiguration(WebviewConfiguration.WebViewConfiguration webViewConfiguration) {
+                copyOnWrite();
+                ((AdPlayerConfigResponse) this.instance).setWebviewConfiguration(webViewConfiguration);
+                return this;
+            }
+        }
+
+        public static Builder newBuilder(AdPlayerConfigResponse adPlayerConfigResponse) {
+            return DEFAULT_INSTANCE.createBuilder(adPlayerConfigResponse);
+        }
+
+        public static AdPlayerConfigResponse parseDelimitedFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseDelimitedFrom(DEFAULT_INSTANCE, inputStream, extensionRegistryLite);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(ByteBuffer byteBuffer, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteBuffer, extensionRegistryLite);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(ByteString byteString) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteString);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(ByteString byteString, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, byteString, extensionRegistryLite);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(byte[] bArr) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, bArr);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(byte[] bArr, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, bArr, extensionRegistryLite);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(InputStream inputStream) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, inputStream);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, inputStream, extensionRegistryLite);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(CodedInputStream codedInputStream) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, codedInputStream);
+        }
+
+        public static AdPlayerConfigResponse parseFrom(CodedInputStream codedInputStream, ExtensionRegistryLite extensionRegistryLite) {
+            return (AdPlayerConfigResponse) GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, codedInputStream, extensionRegistryLite);
+        }
+    }
+
+    public static void registerAllExtensions(ExtensionRegistryLite extensionRegistryLite) {
+    }
+}

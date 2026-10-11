@@ -1,0 +1,33 @@
+package defpackage;
+
+/* JADX WARN: Failed to restore enum class, 'enum' modifier and super class removed */
+/* JADX WARN: Unknown enum class pattern. Please report as an issue! */
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes2.dex */
+public final class hm0 {
+    public static final /* synthetic */ hm0[] A;
+    public static final hm0 x;
+    public static final hm0 y;
+    public static final hm0 z;
+
+    /* JADX WARN: Type inference failed for: r0v0, types: [java.lang.Enum, hm0] */
+    /* JADX WARN: Type inference failed for: r1v1, types: [java.lang.Enum, hm0] */
+    /* JADX WARN: Type inference failed for: r2v2, types: [java.lang.Enum, hm0] */
+    static {
+        ?? r0 = new Enum("NONE", 0);
+        x = r0;
+        ?? r1 = new Enum("ALL_JSON_OBJECTS", 1);
+        y = r1;
+        ?? r2 = new Enum("POLYMORPHIC", 2);
+        z = r2;
+        A = new hm0[]{r0, r1, r2};
+    }
+
+    public static hm0 valueOf(String str) {
+        return (hm0) Enum.valueOf(hm0.class, str);
+    }
+
+    public static hm0[] values() {
+        return (hm0[]) A.clone();
+    }
+}

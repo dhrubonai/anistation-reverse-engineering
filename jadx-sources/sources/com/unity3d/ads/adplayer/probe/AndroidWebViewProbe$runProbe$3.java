@@ -1,0 +1,54 @@
+package com.unity3d.ads.adplayer.probe;
+
+import com.google.protobuf.ByteString;
+import com.unity3d.ads.MediationInfo;
+import com.unity3d.ads.core.data.model.AdObject;
+import com.unity3d.ads.core.domain.SendDiagnosticEvent;
+import defpackage.ic2;
+import defpackage.m37;
+import defpackage.pn6;
+import defpackage.t36;
+import defpackage.v11;
+import defpackage.vz0;
+import defpackage.w51;
+import defpackage.ze0;
+import java.util.Map;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+@w51(c = "com.unity3d.ads.adplayer.probe.AndroidWebViewProbe$runProbe$3", f = "AndroidWebViewProbe.kt", l = {}, m = "invokeSuspend")
+/* loaded from: classes.dex */
+public final class AndroidWebViewProbe$runProbe$3 extends t36 implements ic2 {
+    final /* synthetic */ double $elapsedMs;
+    int label;
+    final /* synthetic */ AndroidWebViewProbe this$0;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public AndroidWebViewProbe$runProbe$3(AndroidWebViewProbe androidWebViewProbe, double d, vz0 vz0Var) {
+        super(2, vz0Var);
+        this.this$0 = androidWebViewProbe;
+        this.$elapsedMs = d;
+    }
+
+    @Override // defpackage.h30
+    public final vz0 create(Object obj, vz0 vz0Var) {
+        return new AndroidWebViewProbe$runProbe$3(this.this$0, this.$elapsedMs, vz0Var);
+    }
+
+    @Override // defpackage.ic2
+    public final Object invoke(v11 v11Var, vz0 vz0Var) {
+        return ((AndroidWebViewProbe$runProbe$3) create(v11Var, vz0Var)).invokeSuspend(pn6.a);
+    }
+
+    @Override // defpackage.h30
+    public final Object invokeSuspend(Object obj) {
+        SendDiagnosticEvent sendDiagnosticEvent;
+        if (this.label == 0) {
+            m37.N(obj);
+            sendDiagnosticEvent = this.this$0.sendDiagnosticEvent;
+            SendDiagnosticEvent.DefaultImpls.invoke$default(sendDiagnosticEvent, "native_webview_probe_time", new Double(this.$elapsedMs), (Map) null, (Map) null, (AdObject) null, (Integer) null, (ByteString) null, (MediationInfo) null, 252, (Object) null);
+            return pn6.a;
+        }
+        ze0.m("call to 'resume' before 'invoke' with coroutine");
+        return null;
+    }
+}

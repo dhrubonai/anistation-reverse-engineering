@@ -1,0 +1,19 @@
+package defpackage;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class u34 {
+    public final in5 a = jn5.b(0, 16, ta0.y, 1);
+
+    public final Object a(n13 n13Var, vz0 vz0Var) {
+        Object emit = this.a.emit(n13Var, vz0Var);
+        if (emit == w11.x) {
+            return emit;
+        }
+        return pn6.a;
+    }
+
+    public final void b(n13 n13Var) {
+        this.a.d(n13Var);
+    }
+}

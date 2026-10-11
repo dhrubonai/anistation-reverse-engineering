@@ -1,0 +1,16 @@
+# Build artifacts
+*.apk
+build/
+dist/
+*.log
+
+# Large binaries excluded by GitHub 100 MB limit
+tools/jadx/lib/jadx-1.5.0-all.jar
+tools/apktool.jar
+tools/uber-apk-signer.jar
+tools/jadx/bin/*
+original-apk/*.apk
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,685 @@
+package com.discord.org.webrtc;
+
+import android.media.MediaCodec;
+import android.media.MediaFormat;
+import android.os.SystemClock;
+import android.view.Surface;
+import com.discord.DiscordDecoderStreamManager;
+import com.discord.org.webrtc.AndroidVideoDecoder;
+import com.discord.org.webrtc.EglBase;
+import com.discord.org.webrtc.EncodedImage;
+import com.discord.org.webrtc.ThreadUtils;
+import com.discord.org.webrtc.VideoDecoder;
+import com.discord.org.webrtc.VideoFrame;
+import com.unity3d.ads.BuildConfig;
+import defpackage.h11;
+import defpackage.qx1;
+import defpackage.ze0;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.Consumer;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public class AndroidVideoDecoder implements VideoDecoder, VideoSink {
+    private static final int DEQUEUE_INPUT_TIMEOUT_US = 500000;
+    private static final int DEQUEUE_OUTPUT_BUFFER_TIMEOUT_US = 100000;
+    private static final int MEDIA_CODEC_RELEASE_TIMEOUT_MS = 5000;
+    private static final String TAG = "AndroidVideoDecoder";
+    private VideoDecoder.Callback callback;
+    private MediaCodecWrapper codec;
+    private final String codecName;
+    private final VideoCodecMimeType codecType;
+    private int colorFormat;
+    private ThreadUtils.ThreadChecker decoderThreadChecker;
+    private Consumer<Surface> externalSurfaceConsumerListener;
+    private final BlockingDeque<FrameInfo> frameInfos;
+    private boolean hasDecodedFirstFrame;
+    private boolean hasExternalConsumer;
+    private int height;
+    private boolean keyFrameRequired;
+    private final MediaCodecWrapperFactory mediaCodecWrapperFactory;
+    private Thread outputThread;
+    private ThreadUtils.ThreadChecker outputThreadChecker;
+    private DecodedTextureMetadata renderedTextureMetadata;
+    private volatile boolean running;
+    private final EglBase.Context sharedContext;
+    private volatile Exception shutdownException;
+    private int sliceHeight;
+    private String streamId;
+    private int stride;
+    private Surface surface;
+    private SurfaceTextureHelper surfaceTextureHelper;
+    private int width;
+    private final Object dimensionLock = new Object();
+    private final Object renderedTextureMetadataLock = new Object();
+
+    /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+    /* loaded from: classes.dex */
+    public static class DecodedTextureMetadata {
+        final Integer decodeTimeMs;
+        final long presentationTimestampUs;
+
+        public DecodedTextureMetadata(long j, Integer num) {
+            this.presentationTimestampUs = j;
+            this.decodeTimeMs = num;
+        }
+    }
+
+    /* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+    /* loaded from: classes.dex */
+    public static class FrameInfo {
+        final long decodeStartTimeMs;
+        final int rotation;
+
+        public FrameInfo(long j, int i) {
+            this.decodeStartTimeMs = j;
+            this.rotation = i;
+        }
+    }
+
+    public AndroidVideoDecoder(MediaCodecWrapperFactory mediaCodecWrapperFactory, String str, VideoCodecMimeType videoCodecMimeType, int i, EglBase.Context context) {
+        if (isSupportedColorFormat(i)) {
+            this.mediaCodecWrapperFactory = mediaCodecWrapperFactory;
+            this.codecName = str;
+            this.codecType = videoCodecMimeType;
+            this.colorFormat = i;
+            this.sharedContext = context;
+            this.frameInfos = new LinkedBlockingDeque();
+            return;
+        }
+        ze0.k(qx1.h(i, "Unsupported color format: "));
+        throw null;
+    }
+
+    private VideoFrame.Buffer copyI420Buffer(ByteBuffer byteBuffer, int i, int i2, int i3, int i4) {
+        int i5;
+        if (i % 2 == 0) {
+            int i6 = (i3 + 1) / 2;
+            int i7 = i2 % 2;
+            if (i7 == 0) {
+                i5 = (i4 + 1) / 2;
+            } else {
+                i5 = i4 / 2;
+            }
+            int i8 = i5;
+            int i9 = i / 2;
+            int i10 = i * i2;
+            int i11 = i9 * i8;
+            int i12 = ((i9 * i2) / 2) + i10;
+            int i13 = i12 + i11;
+            VideoFrame.I420Buffer allocateI420Buffer = allocateI420Buffer(i3, i4);
+            byteBuffer.limit(i * i4);
+            byteBuffer.position(0);
+            copyPlane(byteBuffer.slice(), i, allocateI420Buffer.getDataY(), allocateI420Buffer.getStrideY(), i3, i4);
+            byteBuffer.limit(i10 + i11);
+            byteBuffer.position(i10);
+            copyPlane(byteBuffer.slice(), i9, allocateI420Buffer.getDataU(), allocateI420Buffer.getStrideU(), i6, i8);
+            if (i7 == 1) {
+                byteBuffer.position(((i8 - 1) * i9) + i10);
+                ByteBuffer dataU = allocateI420Buffer.getDataU();
+                dataU.position(allocateI420Buffer.getStrideU() * i8);
+                dataU.put(byteBuffer);
+            }
+            byteBuffer.limit(i13);
+            byteBuffer.position(i12);
+            copyPlane(byteBuffer.slice(), i9, allocateI420Buffer.getDataV(), allocateI420Buffer.getStrideV(), i6, i8);
+            if (i7 == 1) {
+                byteBuffer.position(((i8 - 1) * i9) + i12);
+                ByteBuffer dataV = allocateI420Buffer.getDataV();
+                dataV.position(allocateI420Buffer.getStrideV() * i8);
+                dataV.put(byteBuffer);
+            }
+            return allocateI420Buffer;
+        }
+        throw new AssertionError(qx1.h(i, "Stride is not divisible by two: "));
+    }
+
+    private VideoFrame.Buffer copyNV12ToI420Buffer(ByteBuffer byteBuffer, int i, int i2, int i3, int i4) {
+        return new NV12Buffer(i3, i4, i, i2, byteBuffer, null).toI420();
+    }
+
+    private Thread createOutputThread() {
+        return new Thread("AndroidVideoDecoder.outputThread") { // from class: com.discord.org.webrtc.AndroidVideoDecoder.1
+            @Override // java.lang.Thread, java.lang.Runnable
+            public void run() {
+                AndroidVideoDecoder.this.outputThreadChecker = new ThreadUtils.ThreadChecker();
+                while (true) {
+                    boolean z = AndroidVideoDecoder.this.running;
+                    AndroidVideoDecoder androidVideoDecoder = AndroidVideoDecoder.this;
+                    if (!z) {
+                        androidVideoDecoder.releaseCodecOnOutputThread();
+                        return;
+                    }
+                    androidVideoDecoder.deliverDecodedFrame();
+                }
+            }
+        };
+    }
+
+    private void deliverByteFrame(int i, MediaCodec.BufferInfo bufferInfo, int i2, Integer num) {
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        AndroidVideoDecoder androidVideoDecoder;
+        VideoFrame.Buffer copyNV12ToI420Buffer;
+        synchronized (this.dimensionLock) {
+            i3 = this.width;
+            i4 = this.height;
+            i5 = this.stride;
+            i6 = this.sliceHeight;
+        }
+        int i7 = bufferInfo.size;
+        if (i7 < ((i3 * i4) * 3) / 2) {
+            Logging.e(TAG, "Insufficient output buffer size: " + i7);
+            return;
+        }
+        if (i7 < ((i5 * i4) * 3) / 2 && i6 == i4 && i5 > i3) {
+            i5 = (i7 * 2) / (i4 * 3);
+        }
+        int i8 = i5;
+        ByteBuffer outputBuffer = this.codec.getOutputBuffer(i);
+        outputBuffer.position(bufferInfo.offset);
+        outputBuffer.limit(bufferInfo.offset + bufferInfo.size);
+        ByteBuffer slice = outputBuffer.slice();
+        if (this.colorFormat == 19) {
+            androidVideoDecoder = this;
+            copyNV12ToI420Buffer = androidVideoDecoder.copyI420Buffer(slice, i8, i6, i3, i4);
+        } else {
+            androidVideoDecoder = this;
+            copyNV12ToI420Buffer = androidVideoDecoder.copyNV12ToI420Buffer(slice, i8, i6, i3, i4);
+        }
+        androidVideoDecoder.codec.releaseOutputBuffer(i, false);
+        VideoFrame videoFrame = new VideoFrame(copyNV12ToI420Buffer, i2, bufferInfo.presentationTimeUs * 1000);
+        androidVideoDecoder.callback.onDecodedFrame(videoFrame, num, null);
+        videoFrame.release();
+    }
+
+    private void deliverTextureFrame(int i, MediaCodec.BufferInfo bufferInfo, int i2, Integer num) {
+        int i3;
+        int i4;
+        synchronized (this.dimensionLock) {
+            i3 = this.width;
+            i4 = this.height;
+        }
+        synchronized (this.renderedTextureMetadataLock) {
+            try {
+                if (this.hasExternalConsumer) {
+                    this.codec.releaseOutputBuffer(i, true);
+                    VideoFrame videoFrame = new VideoFrame(new MockBuffer(i3, i4), i2, bufferInfo.presentationTimeUs * 1000);
+                    VideoDecoder.Callback callback = this.callback;
+                    if (callback != null) {
+                        callback.onDecodedFrame(videoFrame, num, null);
+                    }
+                    videoFrame.release();
+                    return;
+                }
+                if (this.renderedTextureMetadata != null) {
+                    this.codec.releaseOutputBuffer(i, false);
+                    return;
+                }
+                if (i3 > 0 && i4 > 0) {
+                    this.surfaceTextureHelper.setTextureSize(i3, i4);
+                    this.surfaceTextureHelper.setFrameRotation(i2);
+                    this.renderedTextureMetadata = new DecodedTextureMetadata(bufferInfo.presentationTimeUs, num);
+                    this.codec.releaseOutputBuffer(i, true);
+                    return;
+                }
+                this.codec.releaseOutputBuffer(i, false);
+            } catch (Throwable th) {
+                throw th;
+            }
+        }
+    }
+
+    private VideoCodecStatus initDecodeInternal(int i, int i2) {
+        this.decoderThreadChecker.checkIsOnValidThread();
+        String str = this.codecName;
+        VideoCodecMimeType videoCodecMimeType = this.codecType;
+        int i3 = this.colorFormat;
+        StringBuilder sb = new StringBuilder("initDecodeInternal name: ");
+        sb.append(str);
+        sb.append(" type: ");
+        sb.append(videoCodecMimeType);
+        sb.append(" width: ");
+        h11.y(sb, i, " height: ", i2, " color format: ");
+        sb.append(i3);
+        Logging.d(TAG, sb.toString());
+        if (this.outputThread != null) {
+            Logging.e(TAG, "initDecodeInternal called while the codec is already running");
+            return VideoCodecStatus.FALLBACK_SOFTWARE;
+        }
+        this.width = i;
+        this.height = i2;
+        this.stride = i;
+        this.sliceHeight = i2;
+        this.hasDecodedFirstFrame = false;
+        this.keyFrameRequired = true;
+        try {
+            this.codec = this.mediaCodecWrapperFactory.createByCodecName(this.codecName);
+            try {
+                MediaFormat createVideoFormat = MediaFormat.createVideoFormat(this.codecType.mimeType(), i, i2);
+                if (this.sharedContext == null) {
+                    createVideoFormat.setInteger("color-format", this.colorFormat);
+                }
+                this.codec.configure(createVideoFormat, this.surface, null, 0);
+                this.codec.start();
+                this.running = true;
+                Thread createOutputThread = createOutputThread();
+                this.outputThread = createOutputThread;
+                createOutputThread.start();
+                Logging.d(TAG, "initDecodeInternal done");
+                return VideoCodecStatus.OK;
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                Logging.e(TAG, "initDecode failed", e);
+                release();
+                return VideoCodecStatus.FALLBACK_SOFTWARE;
+            }
+        } catch (IOException | IllegalArgumentException | IllegalStateException unused) {
+            Logging.e(TAG, "Cannot create media decoder " + this.codecName);
+            return VideoCodecStatus.FALLBACK_SOFTWARE;
+        }
+    }
+
+    private boolean isSupportedColorFormat(int i) {
+        for (int i2 : MediaCodecUtils.DECODER_COLOR_FORMATS) {
+            if (i2 == i) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void maybeBindCodecOutputSurfaceUnderLock() {
+        Surface surface;
+        if (this.codec != null && (surface = this.surface) != null && surface.isValid()) {
+            try {
+                this.codec.setOutputSurface(this.surface);
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                Logging.e(TAG, "maybeBindCodecOutputSurfaceUnderLock setOutputSurface failed streamId=" + this.streamId, e);
+            }
+        }
+    }
+
+    private VideoCodecStatus maybeInitDecodeDeferredSurfaceDirect() {
+        String str;
+        Surface surface;
+        int i;
+        int i2;
+        if (this.codec != null) {
+            return VideoCodecStatus.OK;
+        }
+        if (DiscordDecoderStreamManager.isSurfaceDirectPathEnabled() && (str = this.streamId) != null && !str.isEmpty() && this.hasExternalConsumer) {
+            synchronized (this.renderedTextureMetadataLock) {
+                try {
+                    Surface surface2 = this.surface;
+                    if (surface2 != null && surface2.isValid()) {
+                        surface = this.surface;
+                    } else {
+                        surface = null;
+                    }
+                } catch (Throwable th) {
+                    throw th;
+                }
+            }
+            if (surface == null) {
+                surface = DiscordDecoderStreamManager.getStreamConsumer(this.streamId);
+            }
+            if (surface != null && surface.isValid()) {
+                synchronized (this.dimensionLock) {
+                    i = this.width;
+                    i2 = this.height;
+                }
+                if (i > 0 && i2 > 0) {
+                    synchronized (this.renderedTextureMetadataLock) {
+                        this.surface = surface;
+                    }
+                    return initDecodeInternal(i, i2);
+                }
+                Logging.e(TAG, "maybeInitDecodeDeferredSurfaceDirect invalid dimensions w=" + i + " h=" + i2);
+                return VideoCodecStatus.ERROR;
+            }
+            return VideoCodecStatus.NO_OUTPUT;
+        }
+        return VideoCodecStatus.OK;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:25:0x00ea  */
+    /* JADX WARN: Removed duplicated region for block: B:30:0x00fe A[EXC_TOP_SPLITTER, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+        To view partially-correct add '--show-bad-code' argument
+    */
+    private void reformat(android.media.MediaFormat r9) {
+        /*
+            Method dump skipped, instructions count: 394
+            To view this dump add '--comments-level debug' option
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.discord.org.webrtc.AndroidVideoDecoder.reformat(android.media.MediaFormat):void");
+    }
+
+    private VideoCodecStatus reinitDecode(int i, int i2) {
+        this.decoderThreadChecker.checkIsOnValidThread();
+        VideoCodecStatus releaseInternal = releaseInternal();
+        if (releaseInternal != VideoCodecStatus.OK) {
+            return releaseInternal;
+        }
+        return initDecodeInternal(i, i2);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public void releaseCodecOnOutputThread() {
+        this.outputThreadChecker.checkIsOnValidThread();
+        Logging.d(TAG, "Releasing MediaCodec on output thread");
+        try {
+            this.codec.stop();
+        } catch (Exception e) {
+            Logging.e(TAG, "Media decoder stop failed", e);
+        }
+        try {
+            this.codec.release();
+        } catch (Exception e2) {
+            Logging.e(TAG, "Media decoder release failed", e2);
+            this.shutdownException = e2;
+        }
+        Logging.d(TAG, "Release on output thread done");
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private VideoCodecStatus releaseInternal() {
+        VideoCodecStatus videoCodecStatus;
+        if (!this.running) {
+            Logging.d(TAG, "release: Decoder is not running.");
+            return VideoCodecStatus.OK;
+        }
+        try {
+            this.running = false;
+            if (!ThreadUtils.joinUninterruptibly(this.outputThread, 5000L)) {
+                Logging.e(TAG, "Media decoder release timeout", new RuntimeException());
+                videoCodecStatus = VideoCodecStatus.TIMEOUT;
+            } else if (this.shutdownException != null) {
+                Logging.e(TAG, "Media decoder release error", new RuntimeException(this.shutdownException));
+                this.shutdownException = null;
+                videoCodecStatus = VideoCodecStatus.ERROR;
+            } else {
+                this.codec = null;
+                this.outputThread = null;
+                return VideoCodecStatus.OK;
+            }
+            return videoCodecStatus;
+        } finally {
+            this.codec = null;
+            this.outputThread = null;
+        }
+    }
+
+    private void stopOnOutputThread(Exception exc) {
+        this.outputThreadChecker.checkIsOnValidThread();
+        this.running = false;
+        this.shutdownException = exc;
+    }
+
+    public VideoFrame.I420Buffer allocateI420Buffer(int i, int i2) {
+        return JavaI420Buffer.allocate(i, i2);
+    }
+
+    public void copyPlane(ByteBuffer byteBuffer, int i, ByteBuffer byteBuffer2, int i2, int i3, int i4) {
+        YuvHelper.copyPlane(byteBuffer, i, byteBuffer2, i2, i3, i4);
+    }
+
+    public SurfaceTextureHelper createSurfaceTextureHelper() {
+        return SurfaceTextureHelper.create("decoder-texture-thread", this.sharedContext);
+    }
+
+    @Override // com.discord.org.webrtc.VideoDecoder
+    public VideoCodecStatus decode(EncodedImage encodedImage, VideoDecoder.DecodeInfo decodeInfo) {
+        int i;
+        int i2;
+        VideoCodecStatus reinitDecode;
+        this.decoderThreadChecker.checkIsOnValidThread();
+        if (this.callback == null) {
+            Logging.d(TAG, "decode uninitialized, callback null");
+            return VideoCodecStatus.UNINITIALIZED;
+        }
+        VideoCodecStatus maybeInitDecodeDeferredSurfaceDirect = maybeInitDecodeDeferredSurfaceDirect();
+        VideoCodecStatus videoCodecStatus = VideoCodecStatus.OK;
+        if (maybeInitDecodeDeferredSurfaceDirect != videoCodecStatus) {
+            return maybeInitDecodeDeferredSurfaceDirect;
+        }
+        if (this.codec == null) {
+            Logging.d(TAG, "decode uninitialized, codec null after deferred surface-direct init");
+            return VideoCodecStatus.UNINITIALIZED;
+        }
+        ByteBuffer byteBuffer = encodedImage.buffer;
+        if (byteBuffer == null) {
+            Logging.e(TAG, "decode() - no input data");
+            return VideoCodecStatus.ERR_PARAMETER;
+        }
+        int remaining = byteBuffer.remaining();
+        if (remaining == 0) {
+            Logging.e(TAG, "decode() - input buffer empty");
+            return VideoCodecStatus.ERR_PARAMETER;
+        }
+        synchronized (this.dimensionLock) {
+            i = this.width;
+            i2 = this.height;
+        }
+        int i3 = encodedImage.encodedWidth;
+        int i4 = encodedImage.encodedHeight;
+        if (i3 * i4 > 0 && ((i3 != i || i4 != i2) && (reinitDecode = reinitDecode(i3, i4)) != videoCodecStatus)) {
+            return reinitDecode;
+        }
+        if (this.keyFrameRequired && encodedImage.frameType != EncodedImage.FrameType.VideoFrameKey) {
+            Logging.e(TAG, "decode() - key frame required first");
+            return VideoCodecStatus.NO_OUTPUT;
+        }
+        try {
+            int dequeueInputBuffer = this.codec.dequeueInputBuffer(500000L);
+            if (dequeueInputBuffer < 0) {
+                Logging.e(TAG, "decode() - no HW buffers available; decoder falling behind");
+                return VideoCodecStatus.ERROR;
+            }
+            try {
+                ByteBuffer inputBuffer = this.codec.getInputBuffer(dequeueInputBuffer);
+                if (inputBuffer.capacity() < remaining) {
+                    Logging.e(TAG, "decode() - HW buffer too small");
+                    return VideoCodecStatus.ERROR;
+                }
+                inputBuffer.put(encodedImage.buffer);
+                this.frameInfos.offer(new FrameInfo(SystemClock.elapsedRealtime(), encodedImage.rotation));
+                try {
+                    this.codec.queueInputBuffer(dequeueInputBuffer, 0, remaining, encodedImage.captureTimeNs / 1000, 0);
+                    if (this.keyFrameRequired) {
+                        this.keyFrameRequired = false;
+                    }
+                    return videoCodecStatus;
+                } catch (IllegalStateException e) {
+                    Logging.e(TAG, "queueInputBuffer failed", e);
+                    this.frameInfos.pollLast();
+                    return VideoCodecStatus.ERROR;
+                }
+            } catch (IllegalStateException e2) {
+                Logging.e(TAG, "getInputBuffer with index=" + dequeueInputBuffer + " failed", e2);
+                return VideoCodecStatus.ERROR;
+            }
+        } catch (IllegalStateException e3) {
+            Logging.e(TAG, "dequeueInputBuffer failed", e3);
+            return VideoCodecStatus.ERROR;
+        }
+    }
+
+    public void deliverDecodedFrame() {
+        Integer num;
+        int i;
+        this.outputThreadChecker.checkIsOnValidThread();
+        try {
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+            int dequeueOutputBuffer = this.codec.dequeueOutputBuffer(bufferInfo, 100000L);
+            if (dequeueOutputBuffer == -2) {
+                reformat(this.codec.getOutputFormat());
+                return;
+            }
+            if (dequeueOutputBuffer < 0) {
+                Logging.v(TAG, "dequeueOutputBuffer returned " + dequeueOutputBuffer);
+                return;
+            }
+            FrameInfo poll = this.frameInfos.poll();
+            if (poll != null) {
+                num = Integer.valueOf((int) (SystemClock.elapsedRealtime() - poll.decodeStartTimeMs));
+                i = poll.rotation;
+            } else {
+                num = null;
+                i = 0;
+            }
+            this.hasDecodedFirstFrame = true;
+            if (this.surface != null) {
+                deliverTextureFrame(dequeueOutputBuffer, bufferInfo, i, num);
+            } else {
+                deliverByteFrame(dequeueOutputBuffer, bufferInfo, i, num);
+            }
+        } catch (IllegalStateException e) {
+            Logging.e(TAG, "deliverDecodedFrame failed", e);
+        }
+    }
+
+    @Override // com.discord.org.webrtc.VideoDecoder
+    public String getImplementationName() {
+        return this.codecName;
+    }
+
+    @Override // com.discord.org.webrtc.VideoDecoder
+    public VideoCodecStatus initDecode(VideoDecoder.Settings settings, VideoDecoder.Callback callback) {
+        String str;
+        this.decoderThreadChecker = new ThreadUtils.ThreadChecker();
+        this.callback = callback;
+        this.hasExternalConsumer = false;
+        if (DiscordDecoderStreamManager.isSurfaceDirectPathEnabled() && (str = this.streamId) != null && !str.isEmpty()) {
+            Surface streamConsumer = DiscordDecoderStreamManager.getStreamConsumer(this.streamId);
+            if (streamConsumer != null && streamConsumer.isValid()) {
+                this.surface = streamConsumer;
+                this.hasExternalConsumer = true;
+                return initDecodeInternal(settings.width, settings.height);
+            }
+            this.hasExternalConsumer = true;
+            Consumer<Surface> consumer = new Consumer() { // from class: zf
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    AndroidVideoDecoder.this.lambda$initDecode$0((Surface) obj);
+                }
+            };
+            this.externalSurfaceConsumerListener = consumer;
+            DiscordDecoderStreamManager.addOnConsumerReadyListener(this.streamId, consumer);
+            synchronized (this.dimensionLock) {
+                int i = settings.width;
+                this.width = i;
+                int i2 = settings.height;
+                this.height = i2;
+                this.stride = i;
+                this.sliceHeight = i2;
+            }
+            return VideoCodecStatus.OK;
+        }
+        if (this.sharedContext != null) {
+            try {
+                this.surfaceTextureHelper = createSurfaceTextureHelper();
+                this.surface = new Surface(this.surfaceTextureHelper.getSurfaceTexture());
+                this.surfaceTextureHelper.startListening(this);
+            } catch (Throwable th) {
+                Logging.e(TAG, "Error creating SurfaceTextureHelper", th);
+                Surface surface = this.surface;
+                if (surface != null) {
+                    surface.release();
+                    this.surface = null;
+                }
+                SurfaceTextureHelper surfaceTextureHelper = this.surfaceTextureHelper;
+                if (surfaceTextureHelper != null) {
+                    surfaceTextureHelper.dispose();
+                    this.surfaceTextureHelper = null;
+                }
+                return VideoCodecStatus.FALLBACK_SOFTWARE;
+            }
+        }
+        return initDecodeInternal(settings.width, settings.height);
+    }
+
+    @Override // com.discord.org.webrtc.VideoSink
+    public void onFrame(VideoFrame videoFrame) {
+        long j;
+        Integer num;
+        synchronized (this.renderedTextureMetadataLock) {
+            DecodedTextureMetadata decodedTextureMetadata = this.renderedTextureMetadata;
+            if (decodedTextureMetadata != null) {
+                j = decodedTextureMetadata.presentationTimestampUs * 1000;
+                num = decodedTextureMetadata.decodeTimeMs;
+                this.renderedTextureMetadata = null;
+            } else {
+                throw new IllegalStateException("Rendered texture metadata was null in onTextureFrameAvailable.");
+            }
+        }
+        this.callback.onDecodedFrame(new VideoFrame(videoFrame.getBuffer(), videoFrame.getRotation(), j), num, null);
+    }
+
+    @Override // com.discord.org.webrtc.VideoDecoder
+    public VideoCodecStatus release() {
+        boolean z;
+        String str;
+        Consumer<Surface> consumer;
+        Logging.d(TAG, BuildConfig.BUILD_TYPE);
+        VideoCodecStatus releaseInternal = releaseInternal();
+        if (DiscordDecoderStreamManager.isSurfaceDirectPathEnabled() && (str = this.streamId) != null && !str.isEmpty() && (consumer = this.externalSurfaceConsumerListener) != null) {
+            DiscordDecoderStreamManager.removeOnConsumerReadyListener(this.streamId, consumer);
+            this.externalSurfaceConsumerListener = null;
+        }
+        if (this.surface != null) {
+            synchronized (this.renderedTextureMetadataLock) {
+                z = this.hasExternalConsumer;
+                this.hasExternalConsumer = false;
+            }
+            if (!z) {
+                releaseSurface();
+                this.surface = null;
+                this.surfaceTextureHelper.stopListening();
+                this.surfaceTextureHelper.dispose();
+                this.surfaceTextureHelper = null;
+            } else {
+                this.surface = null;
+                SurfaceTextureHelper surfaceTextureHelper = this.surfaceTextureHelper;
+                if (surfaceTextureHelper != null) {
+                    surfaceTextureHelper.stopListening();
+                    this.surfaceTextureHelper.dispose();
+                    this.surfaceTextureHelper = null;
+                }
+            }
+        }
+        synchronized (this.renderedTextureMetadataLock) {
+            this.renderedTextureMetadata = null;
+        }
+        this.callback = null;
+        this.frameInfos.clear();
+        return releaseInternal;
+    }
+
+    public void releaseSurface() {
+        this.surface.release();
+    }
+
+    @Override // com.discord.org.webrtc.VideoDecoder
+    public void setStreamId(String str) {
+        this.streamId = str;
+        if (DiscordDecoderStreamManager.isSurfaceDirectPathEnabled() && str != null && !str.isEmpty()) {
+            DiscordDecoderStreamManager.registerStreamProducer(str, this);
+        }
+    }
+
+    /* renamed from: tryUpdateSurface, reason: merged with bridge method [inline-methods] */
+    public void lambda$initDecode$0(Surface surface) {
+        synchronized (this.renderedTextureMetadataLock) {
+            this.hasExternalConsumer = true;
+            this.surface = surface;
+            maybeBindCodecOutputSurfaceUnderLock();
+        }
+    }
+}

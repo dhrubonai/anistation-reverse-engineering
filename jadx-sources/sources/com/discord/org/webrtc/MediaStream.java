@@ -1,0 +1,142 @@
+package com.discord.org.webrtc;
+
+import defpackage.h11;
+import defpackage.ze0;
+import defpackage.zo5;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public class MediaStream {
+    private static final String TAG = "MediaStream";
+    private long nativeStream;
+    public final List<AudioTrack> audioTracks = new ArrayList();
+    public final List<VideoTrack> videoTracks = new ArrayList();
+    public final List<VideoTrack> preservedVideoTracks = new ArrayList();
+
+    public MediaStream(long j) {
+        this.nativeStream = j;
+    }
+
+    private void checkMediaStreamExists() {
+        if (this.nativeStream != 0) {
+            return;
+        }
+        ze0.m("MediaStream has been disposed.");
+    }
+
+    private static native boolean nativeAddAudioTrackToNativeStream(long j, long j2);
+
+    private static native boolean nativeAddVideoTrackToNativeStream(long j, long j2);
+
+    private static native String nativeGetId(long j);
+
+    private static native boolean nativeRemoveAudioTrack(long j, long j2);
+
+    private static native boolean nativeRemoveVideoTrack(long j, long j2);
+
+    private static void removeMediaStreamTrack(List<? extends MediaStreamTrack> list, long j) {
+        Iterator<? extends MediaStreamTrack> it = list.iterator();
+        while (it.hasNext()) {
+            MediaStreamTrack next = it.next();
+            if (next.getNativeMediaStreamTrack() == j) {
+                next.dispose();
+                it.remove();
+                return;
+            }
+        }
+        Logging.e(TAG, "Couldn't not find track");
+    }
+
+    public void addNativeAudioTrack(long j) {
+        this.audioTracks.add(new AudioTrack(j));
+    }
+
+    public void addNativeVideoTrack(long j) {
+        this.videoTracks.add(new VideoTrack(j));
+    }
+
+    public boolean addPreservedTrack(VideoTrack videoTrack) {
+        checkMediaStreamExists();
+        if (nativeAddVideoTrackToNativeStream(this.nativeStream, videoTrack.getNativeVideoTrack())) {
+            this.preservedVideoTracks.add(videoTrack);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addTrack(AudioTrack audioTrack) {
+        checkMediaStreamExists();
+        if (nativeAddAudioTrackToNativeStream(this.nativeStream, audioTrack.getNativeAudioTrack())) {
+            this.audioTracks.add(audioTrack);
+            return true;
+        }
+        return false;
+    }
+
+    public void dispose() {
+        checkMediaStreamExists();
+        while (!this.audioTracks.isEmpty()) {
+            AudioTrack audioTrack = this.audioTracks.get(0);
+            removeTrack(audioTrack);
+            audioTrack.dispose();
+        }
+        while (!this.videoTracks.isEmpty()) {
+            VideoTrack videoTrack = this.videoTracks.get(0);
+            removeTrack(videoTrack);
+            videoTrack.dispose();
+        }
+        while (!this.preservedVideoTracks.isEmpty()) {
+            removeTrack(this.preservedVideoTracks.get(0));
+        }
+        JniCommon.nativeReleaseRef(this.nativeStream);
+        this.nativeStream = 0L;
+    }
+
+    public String getId() {
+        checkMediaStreamExists();
+        return nativeGetId(this.nativeStream);
+    }
+
+    public long getNativeMediaStream() {
+        checkMediaStreamExists();
+        return this.nativeStream;
+    }
+
+    public void removeAudioTrack(long j) {
+        removeMediaStreamTrack(this.audioTracks, j);
+    }
+
+    public boolean removeTrack(VideoTrack videoTrack) {
+        checkMediaStreamExists();
+        this.videoTracks.remove(videoTrack);
+        this.preservedVideoTracks.remove(videoTrack);
+        return nativeRemoveVideoTrack(this.nativeStream, videoTrack.getNativeVideoTrack());
+    }
+
+    public void removeVideoTrack(long j) {
+        removeMediaStreamTrack(this.videoTracks, j);
+    }
+
+    public String toString() {
+        String id = getId();
+        return zo5.k(this.videoTracks.size(), "]", h11.m(this.audioTracks.size(), "[", id, ":A=", ":V="));
+    }
+
+    public boolean addTrack(VideoTrack videoTrack) {
+        checkMediaStreamExists();
+        if (!nativeAddVideoTrackToNativeStream(this.nativeStream, videoTrack.getNativeVideoTrack())) {
+            return false;
+        }
+        this.videoTracks.add(videoTrack);
+        return true;
+    }
+
+    public boolean removeTrack(AudioTrack audioTrack) {
+        checkMediaStreamExists();
+        this.audioTracks.remove(audioTrack);
+        return nativeRemoveAudioTrack(this.nativeStream, audioTrack.getNativeAudioTrack());
+    }
+}

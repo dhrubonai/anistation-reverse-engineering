@@ -1,0 +1,59 @@
+package defpackage;
+
+/* compiled from: r8-map-id-17faeaa4e2ea105f16b10ec31fd03082f4cfa6637e1a42b62c06284cbae9c44f */
+/* loaded from: classes.dex */
+public final class rn extends t36 implements ic2 {
+    public byte x;
+    public /* synthetic */ Object y;
+    public final /* synthetic */ zn z;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public rn(vz0 vz0Var, zn znVar) {
+        super(2, vz0Var);
+        this.z = znVar;
+    }
+
+    @Override // defpackage.h30
+    public final vz0 create(Object obj, vz0 vz0Var) {
+        rn rnVar = new rn(vz0Var, this.z);
+        rnVar.y = obj;
+        return rnVar;
+    }
+
+    @Override // defpackage.ic2
+    public final Object invoke(Object obj, Object obj2) {
+        return ((rn) create((x42) obj, (vz0) obj2)).invokeSuspend(pn6.a);
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:45:0x00a5, code lost:
+    
+        if (r0.emit(r9, r12) == r8) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:52:0x0049, code lost:
+    
+        if (r0.emit(r13, r12) == r8) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:54:0x0145, code lost:
+    
+        if (r0.emit(r13, r12) != r8) goto L76;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:72:0x00cb, code lost:
+    
+        if (r0.emit(r13, r12) != r8) goto L76;
+     */
+    /* JADX WARN: Failed to find 'out' block for switch in B:3:0x0011. Please report as an issue. */
+    /* JADX WARN: Removed duplicated region for block: B:33:0x0068 A[Catch: Exception -> 0x002e, u45 -> 0x0031, TryCatch #4 {u45 -> 0x0031, Exception -> 0x002e, blocks: (B:29:0x0029, B:30:0x0034, B:31:0x005e, B:33:0x0068, B:36:0x007e, B:38:0x0084, B:41:0x0090, B:44:0x0095, B:46:0x008c, B:48:0x004d), top: B:2:0x0011, outer: #2 }] */
+    /* JADX WARN: Removed duplicated region for block: B:36:0x007e A[Catch: Exception -> 0x002e, u45 -> 0x0031, TryCatch #4 {u45 -> 0x0031, Exception -> 0x002e, blocks: (B:29:0x0029, B:30:0x0034, B:31:0x005e, B:33:0x0068, B:36:0x007e, B:38:0x0084, B:41:0x0090, B:44:0x0095, B:46:0x008c, B:48:0x004d), top: B:2:0x0011, outer: #2 }] */
+    @Override // defpackage.h30
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+        To view partially-correct add '--show-bad-code' argument
+    */
+    public final java.lang.Object invokeSuspend(java.lang.Object r13) {
+        /*
+            Method dump skipped, instructions count: 354
+            To view this dump add '--comments-level debug' option
+        */
+        throw new UnsupportedOperationException("Method not decompiled: defpackage.rn.invokeSuspend(java.lang.Object):java.lang.Object");
+    }
+}
