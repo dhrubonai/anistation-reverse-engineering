@@ -1,0 +1,88 @@
+package com.google.firebase.auth;
+
+import android.app.Activity;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+import c5.a;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.PhoneAuthOptions;
+import java.util.concurrent.TimeUnit;
+import p7.a0;
+import w7.b;
+
+/* loaded from: classes.dex */
+public class PhoneAuthProvider {
+    public static final String PHONE_SIGN_IN_METHOD = "phone";
+    public static final String PROVIDER_ID = "phone";
+    private final FirebaseAuth zza;
+
+    /* loaded from: classes.dex */
+    public static class ForceResendingToken extends a {
+        public static final Parcelable.Creator<ForceResendingToken> CREATOR = new zze();
+
+        public static ForceResendingToken zza() {
+            return new ForceResendingToken();
+        }
+
+        @Override // android.os.Parcelable
+        public void writeToParcel(Parcel parcel, int i10) {
+            a0.u0(a0.t0(20293, parcel), parcel);
+        }
+    }
+
+    /* loaded from: classes.dex */
+    public static abstract class OnVerificationStateChangedCallbacks {
+        private static final e5.a zza = new e5.a("PhoneAuthProvider", new String[0]);
+
+        public void onCodeAutoRetrievalTimeOut(String str) {
+            e5.a aVar = zza;
+            Log.i(aVar.f3538a, aVar.d("Sms auto retrieval timed-out.", new Object[0]));
+        }
+
+        public void onCodeSent(String str, ForceResendingToken forceResendingToken) {
+        }
+
+        public abstract void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential);
+
+        public abstract void onVerificationFailed(FirebaseException firebaseException);
+    }
+
+    private PhoneAuthProvider(FirebaseAuth firebaseAuth) {
+        this.zza = firebaseAuth;
+    }
+
+    public static PhoneAuthCredential getCredential(String str, String str2) {
+        return PhoneAuthCredential.zza(str, str2);
+    }
+
+    @Deprecated
+    public static PhoneAuthProvider getInstance() {
+        return new PhoneAuthProvider(FirebaseAuth.getInstance(FirebaseApp.getInstance()));
+    }
+
+    public static void verifyPhoneNumber(PhoneAuthOptions phoneAuthOptions) {
+        b.s(phoneAuthOptions);
+        FirebaseAuth.zza(phoneAuthOptions);
+    }
+
+    @Deprecated
+    public static PhoneAuthProvider getInstance(FirebaseAuth firebaseAuth) {
+        return new PhoneAuthProvider(firebaseAuth);
+    }
+
+    @Deprecated
+    public void verifyPhoneNumber(String str, long j4, TimeUnit timeUnit, Activity activity, OnVerificationStateChangedCallbacks onVerificationStateChangedCallbacks) {
+        verifyPhoneNumber(PhoneAuthOptions.newBuilder(this.zza).setPhoneNumber(str).setTimeout(Long.valueOf(j4), timeUnit).setActivity(activity).setCallbacks(onVerificationStateChangedCallbacks).build());
+    }
+
+    @Deprecated
+    public void verifyPhoneNumber(String str, long j4, TimeUnit timeUnit, Activity activity, OnVerificationStateChangedCallbacks onVerificationStateChangedCallbacks, ForceResendingToken forceResendingToken) {
+        PhoneAuthOptions.Builder callbacks = PhoneAuthOptions.newBuilder(this.zza).setPhoneNumber(str).setTimeout(Long.valueOf(j4), timeUnit).setActivity(activity).setCallbacks(onVerificationStateChangedCallbacks);
+        if (forceResendingToken != null) {
+            callbacks.setForceResendingToken(forceResendingToken);
+        }
+        verifyPhoneNumber(callbacks.build());
+    }
+}

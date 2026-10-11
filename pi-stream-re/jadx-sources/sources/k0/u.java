@@ -1,0 +1,57 @@
+package k0;
+
+import android.content.ClipData;
+import android.content.Context;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spanned;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import g0.z;
+
+/* loaded from: classes.dex */
+public final class u implements z {
+    public final g0.h a(View view, g0.h hVar) {
+        CharSequence coerceToStyledText;
+        if (Log.isLoggable("ReceiveContent", 3)) {
+            Log.d("ReceiveContent", "onReceive: " + hVar);
+        }
+        if (hVar.f4216a.w() == 2) {
+            return hVar;
+        }
+        g0.g gVar = hVar.f4216a;
+        ClipData g10 = gVar.g();
+        int r8 = gVar.r();
+        TextView textView = (TextView) view;
+        Editable editable = (Editable) textView.getText();
+        Context context = textView.getContext();
+        boolean z9 = false;
+        for (int i10 = 0; i10 < g10.getItemCount(); i10++) {
+            ClipData.Item itemAt = g10.getItemAt(i10);
+            if ((r8 & 1) != 0) {
+                coerceToStyledText = itemAt.coerceToText(context);
+                if (coerceToStyledText instanceof Spanned) {
+                    coerceToStyledText = coerceToStyledText.toString();
+                }
+            } else {
+                coerceToStyledText = itemAt.coerceToStyledText(context);
+            }
+            if (coerceToStyledText != null) {
+                if (!z9) {
+                    int selectionStart = Selection.getSelectionStart(editable);
+                    int selectionEnd = Selection.getSelectionEnd(editable);
+                    int max = Math.max(0, Math.min(selectionStart, selectionEnd));
+                    int max2 = Math.max(0, Math.max(selectionStart, selectionEnd));
+                    Selection.setSelection(editable, max2);
+                    editable.replace(max, max2, coerceToStyledText);
+                    z9 = true;
+                } else {
+                    editable.insert(Selection.getSelectionEnd(editable), "\n");
+                    editable.insert(Selection.getSelectionEnd(editable), coerceToStyledText);
+                }
+            }
+        }
+        return null;
+    }
+}

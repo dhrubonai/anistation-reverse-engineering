@@ -1,0 +1,300 @@
+package com.google.android.gms.internal.p002firebaseauthapi;
+
+import java.util.Iterator;
+import java.util.Map;
+
+/* loaded from: classes.dex */
+final class zzakq<T> implements zzalc<T> {
+    private final zzakk zza;
+    private final zzamb<?, ?> zzb;
+    private final boolean zzc;
+    private final zzair<?> zzd;
+
+    private zzakq(zzamb<?, ?> zzambVar, zzair<?> zzairVar, zzakk zzakkVar) {
+        this.zzb = zzambVar;
+        this.zzc = zzairVar.zza(zzakkVar);
+        this.zzd = zzairVar;
+        this.zza = zzakkVar;
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final int zza(T t9) {
+        zzamb<?, ?> zzambVar = this.zzb;
+        int zzb = zzambVar.zzb(zzambVar.zzd(t9)) + 0;
+        return this.zzc ? zzb + this.zzd.zza(t9).zza() : zzb;
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final int zzb(T t9) {
+        int hashCode = this.zzb.zzd(t9).hashCode();
+        return this.zzc ? (hashCode * 53) + this.zzd.zza(t9).hashCode() : hashCode;
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final void zzc(T t9) {
+        this.zzb.zzf(t9);
+        this.zzd.zzc(t9);
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final boolean zzd(T t9) {
+        return this.zzd.zza(t9).zzg();
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final boolean zzb(T t9, T t10) {
+        if (!this.zzb.zzd(t9).equals(this.zzb.zzd(t10))) {
+            return false;
+        }
+        if (this.zzc) {
+            return this.zzd.zza(t9).equals(this.zzd.zza(t10));
+        }
+        return true;
+    }
+
+    public static <T> zzakq<T> zza(zzamb<?, ?> zzambVar, zzair<?> zzairVar, zzakk zzakkVar) {
+        return new zzakq<>(zzambVar, zzairVar, zzakkVar);
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final T zza() {
+        zzakk zzakkVar = this.zza;
+        if (zzakkVar instanceof zzaja) {
+            return (T) ((zzaja) zzakkVar).zzn();
+        }
+        return (T) zzakkVar.zzp().zzg();
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final void zza(T t9, T t10) {
+        zzale.zza(this.zzb, t9, t10);
+        if (this.zzc) {
+            zzale.zza(this.zzd, t9, t10);
+        }
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:16:0x0086 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:20:? A[LOOP:0: B:2:0x000c->B:20:?, LOOP_END, SYNTHETIC] */
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+        To view partially-correct add '--show-bad-code' argument
+    */
+    public final void zza(T r11, com.google.android.gms.internal.p002firebaseauthapi.zzald r12, com.google.android.gms.internal.p002firebaseauthapi.zzaip r13) {
+        /*
+            r10 = this;
+            com.google.android.gms.internal.firebase-auth-api.zzamb<?, ?> r0 = r10.zzb
+            com.google.android.gms.internal.firebase-auth-api.zzair<?> r1 = r10.zzd
+            java.lang.Object r2 = r0.zzc(r11)
+            com.google.android.gms.internal.firebase-auth-api.zzais r3 = r1.zzb(r11)
+        Lc:
+            int r4 = r12.zzc()     // Catch: java.lang.Throwable -> L8f
+            r5 = 2147483647(0x7fffffff, float:NaN)
+            if (r4 != r5) goto L19
+            r0.zzb(r11, r2)
+            return
+        L19:
+            int r4 = r12.zzd()     // Catch: java.lang.Throwable -> L8f
+            r6 = 11
+            if (r4 == r6) goto L3e
+            r5 = r4 & 7
+            r6 = 2
+            if (r5 != r6) goto L39
+            com.google.android.gms.internal.firebase-auth-api.zzakk r5 = r10.zza     // Catch: java.lang.Throwable -> L8f
+            int r4 = r4 >>> 3
+            java.lang.Object r4 = r1.zza(r13, r5, r4)     // Catch: java.lang.Throwable -> L8f
+            if (r4 == 0) goto L34
+            r1.zza(r12, r4, r13, r3)     // Catch: java.lang.Throwable -> L8f
+            goto L83
+        L34:
+            boolean r4 = r0.zza(r2, r12)     // Catch: java.lang.Throwable -> L8f
+            goto L84
+        L39:
+            boolean r4 = r12.zzt()     // Catch: java.lang.Throwable -> L8f
+            goto L84
+        L3e:
+            r4 = 0
+            r6 = 0
+            r7 = r6
+            r6 = r4
+        L42:
+            int r8 = r12.zzc()     // Catch: java.lang.Throwable -> L8f
+            if (r8 == r5) goto L70
+            int r8 = r12.zzd()     // Catch: java.lang.Throwable -> L8f
+            r9 = 16
+            if (r8 != r9) goto L5b
+            int r7 = r12.zzj()     // Catch: java.lang.Throwable -> L8f
+            com.google.android.gms.internal.firebase-auth-api.zzakk r4 = r10.zza     // Catch: java.lang.Throwable -> L8f
+            java.lang.Object r4 = r1.zza(r13, r4, r7)     // Catch: java.lang.Throwable -> L8f
+            goto L42
+        L5b:
+            r9 = 26
+            if (r8 != r9) goto L6a
+            if (r4 == 0) goto L65
+            r1.zza(r12, r4, r13, r3)     // Catch: java.lang.Throwable -> L8f
+            goto L42
+        L65:
+            com.google.android.gms.internal.firebase-auth-api.zzahm r6 = r12.zzp()     // Catch: java.lang.Throwable -> L8f
+            goto L42
+        L6a:
+            boolean r8 = r12.zzt()     // Catch: java.lang.Throwable -> L8f
+            if (r8 != 0) goto L42
+        L70:
+            int r5 = r12.zzd()     // Catch: java.lang.Throwable -> L8f
+            r8 = 12
+            if (r5 != r8) goto L8a
+            if (r6 == 0) goto L83
+            if (r4 == 0) goto L80
+            r1.zza(r6, r4, r13, r3)     // Catch: java.lang.Throwable -> L8f
+            goto L83
+        L80:
+            r0.zza(r2, r7, r6)     // Catch: java.lang.Throwable -> L8f
+        L83:
+            r4 = 1
+        L84:
+            if (r4 != 0) goto Lc
+            r0.zzb(r11, r2)
+            return
+        L8a:
+            com.google.android.gms.internal.firebase-auth-api.zzajj r12 = com.google.android.gms.internal.p002firebaseauthapi.zzajj.zzb()     // Catch: java.lang.Throwable -> L8f
+            throw r12     // Catch: java.lang.Throwable -> L8f
+        L8f:
+            r12 = move-exception
+            r0.zzb(r11, r2)
+            throw r12
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.gms.internal.p002firebaseauthapi.zzakq.zza(java.lang.Object, com.google.android.gms.internal.firebase-auth-api.zzald, com.google.android.gms.internal.firebase-auth-api.zzaip):void");
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Removed duplicated region for block: B:22:0x0094  */
+    /* JADX WARN: Removed duplicated region for block: B:24:0x0099 A[EDGE_INSN: B:24:0x0099->B:25:0x0099 BREAK  A[LOOP:1: B:10:0x0053->B:18:0x0053], SYNTHETIC] */
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+        To view partially-correct add '--show-bad-code' argument
+    */
+    public final void zza(T r10, byte[] r11, int r12, int r13, com.google.android.gms.internal.p002firebaseauthapi.zzahl r14) {
+        /*
+            r9 = this;
+            r0 = r10
+            com.google.android.gms.internal.firebase-auth-api.zzaja r0 = (com.google.android.gms.internal.p002firebaseauthapi.zzaja) r0
+            com.google.android.gms.internal.firebase-auth-api.zzame r1 = r0.zzb
+            com.google.android.gms.internal.firebase-auth-api.zzame r2 = com.google.android.gms.internal.p002firebaseauthapi.zzame.zzc()
+            if (r1 != r2) goto L11
+            com.google.android.gms.internal.firebase-auth-api.zzame r1 = com.google.android.gms.internal.p002firebaseauthapi.zzame.zzd()
+            r0.zzb = r1
+        L11:
+            com.google.android.gms.internal.firebase-auth-api.zzaja$zzd r10 = (com.google.android.gms.internal.firebase-auth-api.zzaja.zzd) r10
+            r10.zza()
+            r10 = 0
+            r0 = r10
+        L18:
+            if (r12 >= r13) goto La4
+            int r4 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zzc(r11, r12, r14)
+            int r2 = r14.zza
+            r12 = 11
+            r3 = 2
+            if (r2 == r12) goto L51
+            r12 = r2 & 7
+            if (r12 != r3) goto L4c
+            com.google.android.gms.internal.firebase-auth-api.zzair<?> r12 = r9.zzd
+            com.google.android.gms.internal.firebase-auth-api.zzaip r0 = r14.zzd
+            com.google.android.gms.internal.firebase-auth-api.zzakk r3 = r9.zza
+            int r5 = r2 >>> 3
+            java.lang.Object r12 = r12.zza(r0, r3, r5)
+            r0 = r12
+            com.google.android.gms.internal.firebase-auth-api.zzaja$zzf r0 = (com.google.android.gms.internal.firebase-auth-api.zzaja.zzf) r0
+            if (r0 != 0) goto L43
+            r3 = r11
+            r5 = r13
+            r6 = r1
+            r7 = r14
+            int r12 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zza(r2, r3, r4, r5, r6, r7)
+            goto L18
+        L43:
+            com.google.android.gms.internal.p002firebaseauthapi.zzaky.zza()
+            java.lang.NoSuchMethodError r10 = new java.lang.NoSuchMethodError
+            r10.<init>()
+            throw r10
+        L4c:
+            int r12 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zza(r2, r11, r4, r13, r14)
+            goto L18
+        L51:
+            r12 = 0
+            r2 = r10
+        L53:
+            if (r4 >= r13) goto L99
+            int r4 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zzc(r11, r4, r14)
+            int r5 = r14.zza
+            int r6 = r5 >>> 3
+            r7 = r5 & 7
+            if (r6 == r3) goto L7b
+            r8 = 3
+            if (r6 == r8) goto L65
+            goto L90
+        L65:
+            if (r0 != 0) goto L72
+            if (r7 != r3) goto L90
+            int r4 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zza(r11, r4, r14)
+            java.lang.Object r2 = r14.zzc
+            com.google.android.gms.internal.firebase-auth-api.zzahm r2 = (com.google.android.gms.internal.p002firebaseauthapi.zzahm) r2
+            goto L53
+        L72:
+            com.google.android.gms.internal.p002firebaseauthapi.zzaky.zza()
+            java.lang.NoSuchMethodError r10 = new java.lang.NoSuchMethodError
+            r10.<init>()
+            throw r10
+        L7b:
+            if (r7 != 0) goto L90
+            int r4 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zzc(r11, r4, r14)
+            int r12 = r14.zza
+            com.google.android.gms.internal.firebase-auth-api.zzair<?> r0 = r9.zzd
+            com.google.android.gms.internal.firebase-auth-api.zzaip r5 = r14.zzd
+            com.google.android.gms.internal.firebase-auth-api.zzakk r6 = r9.zza
+            java.lang.Object r0 = r0.zza(r5, r6, r12)
+            com.google.android.gms.internal.firebase-auth-api.zzaja$zzf r0 = (com.google.android.gms.internal.firebase-auth-api.zzaja.zzf) r0
+            goto L53
+        L90:
+            r6 = 12
+            if (r5 == r6) goto L99
+            int r4 = com.google.android.gms.internal.p002firebaseauthapi.zzahi.zza(r5, r11, r4, r13, r14)
+            goto L53
+        L99:
+            if (r2 == 0) goto La1
+            int r12 = r12 << 3
+            r12 = r12 | r3
+            r1.zza(r12, r2)
+        La1:
+            r12 = r4
+            goto L18
+        La4:
+            if (r12 != r13) goto La7
+            return
+        La7:
+            com.google.android.gms.internal.firebase-auth-api.zzajj r10 = com.google.android.gms.internal.p002firebaseauthapi.zzajj.zzg()
+            throw r10
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.gms.internal.p002firebaseauthapi.zzakq.zza(java.lang.Object, byte[], int, int, com.google.android.gms.internal.firebase-auth-api.zzahl):void");
+    }
+
+    @Override // com.google.android.gms.internal.p002firebaseauthapi.zzalc
+    public final void zza(T t9, zzanb zzanbVar) {
+        Iterator<Map.Entry<?, Object>> zzd = this.zzd.zza(t9).zzd();
+        while (zzd.hasNext()) {
+            Map.Entry<?, Object> next = zzd.next();
+            zzaiu zzaiuVar = (zzaiu) next.getKey();
+            if (zzaiuVar.zzc() == zzamy.MESSAGE && !zzaiuVar.zze() && !zzaiuVar.zzd()) {
+                if (next instanceof zzajn) {
+                    zzanbVar.zza(zzaiuVar.zza(), (Object) ((zzajn) next).zza().zzc());
+                } else {
+                    zzanbVar.zza(zzaiuVar.zza(), next.getValue());
+                }
+            } else {
+                throw new IllegalStateException("Found invalid MessageSet item.");
+            }
+        }
+        zzamb<?, ?> zzambVar = this.zzb;
+        zzambVar.zza((zzamb<?, ?>) zzambVar.zzd(t9), zzanbVar);
+    }
+}

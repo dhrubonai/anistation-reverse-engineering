@@ -1,0 +1,34 @@
+package com.google.firebase.auth;
+
+import w7.b;
+
+/* loaded from: classes.dex */
+public class TotpMultiFactorAssertion extends MultiFactorAssertion {
+    private final String zza;
+    private final TotpSecret zzb;
+    private final String zzc;
+
+    public TotpMultiFactorAssertion(String str, TotpSecret totpSecret, String str2) {
+        b.o(str);
+        this.zza = str;
+        this.zzb = totpSecret;
+        this.zzc = str2;
+    }
+
+    @Override // com.google.firebase.auth.MultiFactorAssertion
+    public String getFactorId() {
+        return TotpMultiFactorGenerator.FACTOR_ID;
+    }
+
+    public final TotpSecret zza() {
+        return this.zzb;
+    }
+
+    public final String zzb() {
+        return this.zzc;
+    }
+
+    public final String zzc() {
+        return this.zza;
+    }
+}

@@ -1,0 +1,18 @@
+package j6;
+
+import r6.h0;
+
+/* loaded from: classes.dex */
+public final class d extends h0 {
+    public d() {
+        super(0);
+    }
+
+    @Override // r6.h0
+    public final void V(float f10, float f11, u uVar) {
+        uVar.d(f11 * f10, 180.0f, 90.0f);
+        double d10 = f11;
+        double d11 = f10;
+        uVar.c((float) (Math.sin(Math.toRadians(90.0f)) * d10 * d11), (float) (Math.sin(Math.toRadians(0.0f)) * d10 * d11));
+    }
+}
